@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import Aux from "../../hoc/Auxx/Auxx";
-import Burger from '../../components/Burger/Burger'
-import BuildControls from '../../components/Burger/BuildControls/BuildControls';
-import Modal from '../../components/UI/Modal/Modal'
-import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
-import Spinner from '../../components/UI/Spinner/Spinner'
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Burger from '../../components/Burger/Burger';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Modal from '../../components/UI/Modal/Modal';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import Aux from "../../hoc/Auxx/Auxx";
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 const INGREDIENT_PRICES = {
@@ -85,7 +85,7 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = () => {
-        this.setState({ loading: true });
+        /* this.setState({ loading: true });
         const order = {
             ingredients: this.state.ingredients,
             price: this.state.totalPrice,
@@ -107,7 +107,18 @@ class BurgerBuilder extends Component {
             })
             .catch(error => {
                 this.setState({ loading: false, purchasing: false });
-            });
+            }); */
+            
+            const queryParams = [];
+            for (let i in this.state.ingredients) {
+                queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+            }
+            queryParams.push('price=' + this.state.totalPrice);
+            const queryString = queryParams.join('&')
+            this.props.history.push({
+                pathname: '/checkout',
+                search: '?' + queryString
+            })
     }
 
     render() {
